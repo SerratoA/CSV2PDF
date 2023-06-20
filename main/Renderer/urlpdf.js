@@ -24,7 +24,6 @@ module.exports = function generatePdfs(filePath) {
 
   // formatting of the output PDF
   const options = {
-    format: 'A4',
     displayHeaderFooter: true,
     printBackground: true,
     headerTemplate: "title",
