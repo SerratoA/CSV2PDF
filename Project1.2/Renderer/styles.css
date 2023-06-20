@@ -1,0 +1,125 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding-bottom: 50px;
+  }
+
+.drop-zone-container {
+    position: relative;
+}
+
+.drop-zone-background {
+    position: fixed;
+    top: 45%; /* Adjust the value to move the box up */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 245px;
+    background-color:   #FCA16D;
+    border-radius: 35px;
+}
+
+.drop-zone {
+    width: 300px;
+    height: 225px;
+    border: 2px dashed #ffff;
+    background-color: #F77E3E;
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 45%; /* Adjust the value to move the box up */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.drop-zone h3 {
+    margin: 0;
+}
+
+h1{
+    position: fixed;
+    top: 2%;
+    text-align: center;
+    color: black;
+    font-size: 13pt;
+    align-items: center;
+    display: flex;
+}
+
+.header-image {
+    width: 40px;
+    height: auto;
+}
+
+.header-text {
+    margin-left: 6px;
+    font-family: Verdana, sans-serif;
+    letter-spacing: -1px;
+    font-weight: 400;
+}
+
+.dropzone-text{
+    font-family: Verdana, sans-serif;
+    letter-spacing: -1px;
+    font-weight: 400;
+    margin-top: 50%;
+}
+
+.dropzone-bottom-text{
+    font-family: Verdana, sans-serif;
+    letter-spacing: -1px;
+    font-weight: 300;
+    align-items: center;
+    font-size: 9pt;
+    position: relative;
+    top: 275%;
+}
+
+.dropzone-img {
+    z-index: 9999;
+    width: 50px;
+    align-items: center;
+    position: fixed;
+    top: 35%;
+
+}
+.dropdown-container {
+    z-index: 999999;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+}
+
+
+#convert-button {
+    display: block;
+    padding: 10px 20px;
+    background-color: #FFE6CC;
+    border-color: #D79B00;
+    color: white;
+    font-size: 15px;
+    font-weight: 300;
+    border: 1pt Solid #D79B00;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 99999;
+    position: fixed;
+    top: 375px;
+    left: 200;
+    font-family: Verdana, sans-serif;
+    color:black;
+}
+
+.about-text{
+    font-family: Verdana, sans-serif;
+    letter-spacing: -1px;
+    font-weight: 300;
+    align-items: center;
+    font-size: 9pt;
+}

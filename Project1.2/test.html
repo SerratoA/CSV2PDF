@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Import Options</title>
+</head>
+
+<body>
+  <h1>Import Options</h1>
+
+  <label for="import-source">Select import source:</label>
+  <select id="import-source">
+    <option value="">-- Select Option --</option>
+    <option value="dropbox">Import from Dropbox</option>
+    <option value="google-drive">Import from Google Drive</option>
+    <option value="device">Import from Device</option>
+  </select>
+
+  <div id="import-container"></div>
+
+  <script>
+    const importSourceSelect = document.getElementById("import-source");
+    const importContainer = document.getElementById("import-container");
+
+    importSourceSelect.addEventListener("change", function() {
+      const selectedOption = importSourceSelect.value;
+
+      // Clear previous import container contents
+      importContainer.innerHTML = "";
+
+      if (selectedOption === "dropbox") {
+        importContainer.innerHTML = "<a href='https://www.dropbox.com'>Import from Dropbox</a>";
+      } else if (selectedOption === "google-drive") {
+        importContainer.innerHTML = "<a href='https://drive.google.com'>Import from Google Drive</a>";
+      } else if (selectedOption === "device") {
+        // Implement device import logic here
+        importContainer.innerHTML = "<input type='file' accept='.csv'>"; // Example file input for device import
+      }
+    });
+  </script>
+</body>
+
+</html>
