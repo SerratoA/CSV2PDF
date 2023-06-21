@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
+  <title>CSV to PDF</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1> 
+        <img class="header-image" 
+            src="img/csvIcon.png" 
+            alt="CSV icon">
+        <span class="header-text"> Mass CSV to PDF </span>
+    </h1>
+    <!-- <div class="dropdown-container">
+    <select id="import-source">
+        <option selected value="">CHOOSE FILE</option>
+        <option value="dropbox">Dropbox</option>
+        <option value="google-drive">Google Drive</option>
+        <option value="device">Import from Device</option>
+    </select>
+    </div> 
+ 
+    <-- For drag and drop-->
+    <div id="import-container"></div> 
+
+    <script>
+        // const importSourceSelect = document.getElementById("import-source");
+        // const importContainer = document.getElementById("import-container");
+    
+        // importSourceSelect.addEventListener("change", function() {
+        //   const selectedOption = importSourceSelect.value;
+    
+        //   // Clear previous import container contents
+        //   importContainer.innerHTML = "";
+    
+        //   if (selectedOption === "dropbox") {
+        //     importContainer.innerHTML = "<a href='https://www.dropbox.com'>Import from Dropbox</a>";
+        //   } else if (selectedOption === "google-drive") {
+        //     importContainer.innerHTML = "<a href='https://drive.google.com'>Import from Google Drive</a>";
+        //   } else if (selectedOption === "device") {
+        //     // Implement device import logic here
+        //     importContainer.innerHTML = "<input type='file' accept='.csv'>"; // Example file input for device import
+        //   }
+        // });
+       </script>
+
+    <img class="dropzone-img"
+        src="img/documentIcon.png"
+        alt="Document icon">
+    <div class="drop-zone-container">
+    <div class="drop-zone-background"></div>
+    <div class="drop-zone">
+         <!-- <h3>
+            <span class="dropzone-text">Drag and drop files in the window</span>
+        </h3> -->
+        <h3>
+            <span class="dropzone-bottom-text">or drop files here</span>
+        </h3>
+    </div>
+  </div>
+
+  
+  <div id="convertor">
+    <button id="convert-button">CONVERT</button>
+  </div>
+
+  <p id="inputFileStyle">
+    Input File:<span id="fileInputName"></span>
+  </p>
+
+    
+  
+  <script src="render.js"></script>
+</body>
+</html>
