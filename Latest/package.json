@@ -8,7 +8,7 @@
     "start": "electron ."
   },
   "author": "cyun",
-  "author 2": "serratoa",
+  "author 2": "serratoA",
   "license": "MIT",
   "dependencies": {
     "csv-parser": "^3.0.0",

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require("electron");
 const path = require("path");
 const os = require('os');
 const fs = require('fs');
@@ -11,7 +11,7 @@ let aboutWindow;
 
 function createMainWindow() {
   const mainWindow = new BrowserWindow({
-    title: "CSV to PDF",
+    title: "CSV to PDF App",
     width: 400,
     height: 500,
     resizable: isDev,
@@ -37,13 +37,6 @@ function createMainWindow() {
 
   mainWindow.loadFile(path.join(__dirname, "./Renderer/index.html"));
   
-  // mainWindow.webContents.once("dom-ready", () => {
-  //   mainWindow.webContents.executeJavaScript(`
-  //     document.getElementById("convert-button").addEventListener("click", () => {
-  //       window.convertButtonPressed = true;
-  //     });
-  //   `);
-  // });
 }
 
 //create about
@@ -119,26 +112,39 @@ app.on("window-all-closed", () => {
   }
 });
 
-// ipcMain.on("convert-request", (event, csvFilePath, outputDirectory) => {
-//     require("/Users/chaeilyun/Desktop/Project1 2/Renderer/urlpdf.js")(
-//       csvFilePath,
-//       outputDirectory
-//     );
-// });
 
 ipcMain.on("console-log", (event, ...args) => {
   console.log(...args);
 });
 
 
-ipcMain.on('load:CsvFile', (e, options) => {
-  console.log(options);
-  generatePdfs(options);
-})
+ipcMain.on('load:CsvFile', (e, CSV) => {
+  dialog.showSaveDialog({ properties: ['saveFile', 'createDirectory', 'title'] }). then(result => {
+    if (!result.canceled) {
+      const filePath = result.filePath;
+      const fileName = path.basename(filePath);
+      const saveDirectory = path.dirname(filePath);
+
+      Console.log("File Path: " + filePath);
+      Console.log("File Name: " + fileName);
+      Console.log("Save Directory: " + saveDirectory);
+      
+      generatePdfs(CSV, fileName, saveDirectory);
+    }
+    else {
+      console.log("No file selected!");
+    }
+  }).catch(err => {
+    console.log(err);
+  });
+});
 
 
-function generatePdfs(filePath) {
-  const websiteName = "folder 2"; // created folder name
+
+
+//Generate PDFs script
+function generatePdfs(filePath, fileName, saveDirectory) {
+  const websiteName = fileName; // created folder name
   // const websiteName = customName; // custom name from the directory search
 
   const file = []; // array of objects for URLs
@@ -169,7 +175,7 @@ function generatePdfs(filePath) {
 
   // CHANGE 
   const folderName =
-    "./" + websiteName + " Folder";
+    saveDirectory;
 
   // const folderName = outputDir;
 
