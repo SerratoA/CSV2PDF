@@ -35,7 +35,7 @@ function createMainWindow() {
       });
   }
 
-  mainWindow.loadFile(path.join(__dirname, "./renderer/index.html"));
+  mainWindow.loadFile(path.join(__dirname, "./Renderer/index.html"));
   
   // mainWindow.webContents.once("dom-ready", () => {
   //   mainWindow.webContents.executeJavaScript(`
@@ -59,23 +59,8 @@ function createAboutWindow() {
     }
   });
 
-  aboutWindow.loadFile(path.join(__dirname, "./renderer/about.html"));
+  aboutWindow.loadFile(path.join(__dirname, "./Renderer/about.html"));
 }
-
-// App is ready 
-app.whenReady().then(() => {
-  createMainWindow();
-
-  // implement menu
-  const mainMenu = Menu.buildFromTemplate(menu);
-  Menu.setApplicationMenu(mainMenu);
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createMainWindow();
-    }
-  });
-});
-
 // Menu Template
 
 const menu = [
@@ -112,6 +97,22 @@ const menu = [
   : [])
 ]
 
+
+// App is ready 
+app.whenReady().then(() => {
+  createMainWindow();
+
+  // implement menu
+  const mainMenu = Menu.buildFromTemplate(menu);
+  Menu.setApplicationMenu(mainMenu);
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createMainWindow();
+    }
+  });
+});
+
+
 app.on("window-all-closed", () => {
   if (isMac) {
     app.quit();
@@ -137,7 +138,7 @@ ipcMain.on('load:CsvFile', (e, options) => {
 
 
 function generatePdfs(filePath) {
-  const websiteName = "App Tester 104"; // created folder name
+  const websiteName = "folder 2"; // created folder name
   // const websiteName = customName; // custom name from the directory search
 
   const file = []; // array of objects for URLs
@@ -166,9 +167,9 @@ function generatePdfs(filePath) {
     scale: 1.0,
   };
 
-  // make it work with any website
+  // CHANGE 
   const folderName =
-    "/Users/chaeilyun/Desktop/" + websiteName + " Folder";
+    "./" + websiteName + " Folder";
 
   // const folderName = outputDir;
 
