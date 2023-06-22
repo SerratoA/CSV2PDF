@@ -1,7 +1,9 @@
 
-// From video (above)
 const convert = document.querySelector("#convertor");
-//s
+const dropZone = document.querySelector(".drop-zone");
+const fileInput = document.querySelector("#file-input");
+const fileInputName = document.querySelector("#fileInputName");
+
 //send file path to main.js to generate pdfs
 function urlToPdf(path) {
     console.log("Converting...");
@@ -10,25 +12,25 @@ function urlToPdf(path) {
     ipcRenderer.send('load:CsvFile', path)
 }
 
-document.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+// Variable to track if the button is currently on cooldown
+let isButtonCooldown = false;
+let selectedFilePath = null; // Track the selected file path
 
-for (const f of e.dataTransfer.files) {
-    console.log("filepath of dragged files: ", f.path);
-    console.log("I have the file", f.path);
-    fileInputName.innerHTML = f.name;
-    if(convert){
-        console.log("hello")
-        convert.addEventListener("click", (e) => {
-            urlToPdf(f.path);
-        });
-    }
-}   
-});
+// Function to check if the file has a CSV extension
+function hasCsvExtension(fileName) {
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+    return fileExtension === 'csv';
+}
 
+// Function to handle file selection and set the selected file path
+function handleFileSelection(file) {
+    console.log("filepath of dragged files: ", file.path);
+    console.log("I have the file", file.path);
+    fileInputName.textContent = file.name;
+    selectedFilePath = file.path;
+}
 
-//Event listeners for drag and drop including
+//Event listeners for drag and drop including dragover, dragcenter, and dragleave which check if the file is in the drop space, if the file has left the drop space, and if the file is being dragged over the drop space respectively
 document.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -42,32 +44,44 @@ document.addEventListener("dragleave", (e) => {
     console.log("file has left the drop space");
 });
 
+// Event listener for when a file is dropped into the drop space, and then the file path is sent as an argument to the urlToPdf function
+document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFile = e.dataTransfer.files[0];
+    if (hasCsvExtension(droppedFile.name)) {
+        handleFileSelection(droppedFile);
+    } else {
+        alert("The file you dropped is not a CSV file. Please try again.");
+    }
+});
 
-function alertSuccess() {
-    Toastify.toast({
-        text: "Success!",
-        duration: 3000,
-        close: false,
-        style: {
-            background: "green",
-            color: "white",
-            textAlign: "center",
-        },
+// Event listener for the convert button
+if (convert) {
+    convert.addEventListener("click", () => {
+        if (!isButtonCooldown && selectedFilePath && hasCsvExtension(selectedFilePath)) {
+            isButtonCooldown = true;
+            urlToPdf(selectedFilePath);
+
+            // Set a cooldown period of 5 seconds (adjust as needed)
+            setTimeout(() => {
+                isButtonCooldown = false;
+            }, 10000);
+
+        } else if (isButtonCooldown) {
+            alert("Please wait a few moments before trying to convert again.");
+        }
     });
 }
 
-function alertError(message) {
-    Toastify.toast({
-        text: message,
-        duration: 3000,
-        close: false,
-        style: {
-            background: "red",
-            color: "white",
-            textAlign: "center",
-        },
-    });
-}
+// Event listener for the file input dialog
+fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+        handleFileSelection(selectedFile);
+    }
+  });
+
 
 
 

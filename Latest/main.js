@@ -11,7 +11,7 @@ let aboutWindow;
 
 function createMainWindow() {
   const mainWindow = new BrowserWindow({
-    title: "CSV to PDF App",
+    title: "CSV to PDF Converter",
     width: 400,
     height: 500,
     resizable: isDev,
@@ -125,14 +125,14 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
       const fileName = path.basename(filePath);
       const saveDirectory = path.dirname(filePath);
 
-      Console.log("File Path: " + filePath);
-      Console.log("File Name: " + fileName);
-      Console.log("Save Directory: " + saveDirectory);
+      console.log("File Path: " + filePath);
+      console.log("File Name: " + fileName);
+      console.log("Save Directory: " + saveDirectory);
       
       generatePdfs(CSV, fileName, saveDirectory);
     }
     else {
-      console.log("No file selected!");
+      console.log("No file selected, please try again!");
     }
   }).catch(err => {
     console.log(err);
@@ -177,11 +177,13 @@ function generatePdfs(filePath, fileName, saveDirectory) {
   const folderName =
     saveDirectory;
 
+    const folderNameSave = (folderName + "/" + websiteName);
+
   // const folderName = outputDir;
 
   try {
-    if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
+    if (!fs.existsSync(folderNameSave)) {
+      fs.mkdirSync(folderNameSave);
     }
   } catch (error) {
     console.error("Error when creating valid folder!");
@@ -200,7 +202,7 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       // Use base name as PDF name
       const fileName = path.basename(file[i].url);
       const teamName = path.parse(fileName).name;
-      let outputFilePath = folderName + "/" + teamName + '.pdf';
+      let outputFilePath = folderName + "/" + websiteName + "/" + teamName + '.pdf';
 
       // Buffering time
       let pdfBuffer = Buffer.from(output[i].buffer);
@@ -214,6 +216,7 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       }
       convertBufferToPDF(outputFilePath, pdfBuffer);
     }
+    shell.openPath(folderNameSave);
   });
 };
 

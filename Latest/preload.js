@@ -1,7 +1,6 @@
 const { ipcRenderer, contextBridge, dialog} = require("electron");
 const os = require('os');
 const path = require('path');
-const Toastify = require('toastify-js');
 
 contextBridge.exposeInMainWorld('os', {
   homedir: () => os.homedir(),
@@ -18,9 +17,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     ipcRenderer.on(channel, (event, ...args) => func(...args)),
 });
 
-contextBridge.exposeInMainWorld('Toastify', {
-  toast: (options) => Toastify(options).showToast(),
-});
 
 contextBridge.exposeInMainWorld('dialog', {
   showOpenDialog: (options) => dialog.showOpenDialog(options),

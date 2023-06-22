@@ -1,5 +1,5 @@
 {
-  "name": "project1",
+  "name": "csv-to-pdf",
   "productName": "CSV to PDF",
   "version": "1.0.0",
   "description": "App to convert csv urls to pdf",
@@ -12,7 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "csv-parser": "^3.0.0",
-    "electron": "^25.1.1",
+    "electron": "^25.2.0",
+    "html-pdf-node": "^1.0.8",
     "toastify-js": "^1.12.0"
   }
 }
