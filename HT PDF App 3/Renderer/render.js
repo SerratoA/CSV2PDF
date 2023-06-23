@@ -138,6 +138,8 @@ fileInput.addEventListener("change", () => {
     if (fileInput.files.length > 0) {
       const selectedFile = fileInput.files[0];
         handleFileSelection(selectedFile);
+        dropColor.style.backgroundColor = '#F77E3E';
+        convertButton1.removeAttribute('disabled');
     }
 });
 
