@@ -2,19 +2,23 @@ const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require("electron")
 const path = require("path");
 const os = require('os');
 const fs = require('fs');
+
+process.env.NODE_ENV = 'production';
+
 const isMac = process.platform === "darwin";
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production';
 const html_to_pdf = require('html-pdf-node');
 
 let mainWindow;
-let aboutWindow;
 
 function createMainWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     title: "CSV to PDF Converter",
     width: 400,
     height: 500,
+    icon: `${__dirname}/img/Cat.png`,
     resizable: isDev,
+    maximizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -43,8 +47,10 @@ function createMainWindow() {
 function createAboutWindow() {
   const aboutWindow = new BrowserWindow({
     title: "About CSV to PDF",
-    width: 150,
-    height: 150,
+    width: 275,
+    height: 275,
+    maximizable: false,
+    icon: `${__dirname}/img/Cat.png`,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -121,6 +127,10 @@ ipcMain.on("console-log", (event, ...args) => {
 ipcMain.on('load:CsvFile', (e, CSV) => {
   dialog.showSaveDialog({ properties: ['saveFile', 'createDirectory', 'title'] }). then(result => {
     if (!result.canceled) {
+
+    // mainWindow.webContents.send('update-loading', -1);
+        // enable loading 
+
       const filePath = result.filePath;
       const fileName = path.basename(filePath);
       const saveDirectory = path.dirname(filePath);
@@ -129,6 +139,8 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
       console.log("File Name: " + fileName);
       console.log("Save Directory: " + saveDirectory);
       
+      mainWindow.webContents.send("start-loading");
+
       generatePdfs(CSV, fileName, saveDirectory);
     }
     else {
@@ -138,9 +150,6 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
     console.log(err);
   });
 });
-
-
-
 
 //Generate PDFs script
 function generatePdfs(filePath, fileName, saveDirectory) {
@@ -195,6 +204,8 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       - file: URLs of websites
       - options: formatting options of output PDF
   */
+
+      
   html_to_pdf.generatePdfs(file, options).then(output => {
     for (let i = 0; i < output.length; i++) {
       let humanPageCount = i + 1;
@@ -216,8 +227,9 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       }
       convertBufferToPDF(outputFilePath, pdfBuffer);
     }
+    
+    mainWindow.webContents.send("end-loading");
     shell.openPath(folderNameSave);
   });
 };
-
 

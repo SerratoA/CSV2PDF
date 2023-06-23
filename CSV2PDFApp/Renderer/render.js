@@ -3,7 +3,6 @@ const dropZone = document.querySelector(".drop-zone");
 const fileInput = document.querySelector("#file-input");
 const fileInputName = document.querySelector("#fileInputName");
 const convertButton = document.querySelector("#convert-button");
-const convertButton1 = document.getElementById("convert-button");
 const dotPulse = document.querySelector(".dot-pulse");
 const dropColor = document.getElementById("drop-zone");
 const statusText = document.querySelector(".dropzone-bottom-text");
@@ -35,6 +34,7 @@ ipcRenderer.on("start-loading", () => {
 ipcRenderer.on("end-loading", () =>{
     dotPulse.classList.add("invisible");
     statusText.textContent = "Drag and drop files here";
+    fileInputName.textContent = "";
 })
 
 // Variable to track if the button is currently on cooldown
@@ -82,7 +82,7 @@ document.addEventListener('drop', (e) => {
     const droppedFile = e.dataTransfer.files[0];
     if (hasCsvExtension(droppedFile.name)) {
         handleFileSelection(droppedFile);
-        convertButton1.removeAttribute('disabled');
+        convertButton.removeAttribute('disabled');
     } else {
         alert("The file you dropped is not a CSV file. Please try again.");
     }
@@ -139,7 +139,7 @@ fileInput.addEventListener("change", () => {
       const selectedFile = fileInput.files[0];
         handleFileSelection(selectedFile);
         dropColor.style.backgroundColor = '#F77E3E';
-        convertButton1.removeAttribute('disabled');
+        convertButton.removeAttribute('disabled');
     }
 });
 
