@@ -1,10 +1,10 @@
-# Image Resizer
+# CSV2PDF
 
-Electron application that allows you to select an image and easily change the width and/or height.
 
-<div style="display: flex; justify-content: center">
-<img src="./assets/screen.png" width="400" />
-</div>
+A graphical user interface for converting a CSV files filled with URL entries into a PDF file with screencaps of the sites.
+<img width="433" alt="Cat" src="https://github.com/SerratoA/CSV2PDF/assets/78953056/8e5ee266-b744-4d79-84b5-a11b0f5576cb">
+
+
 
 ## Usage
 
