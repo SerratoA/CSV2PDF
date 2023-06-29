@@ -186,7 +186,10 @@ function generatePdfs(filePath, fileName, saveDirectory) {
   const folderName =
     saveDirectory;
 
-    const folderNameSave = (folderName + "/" + websiteName);
+    const folderNameSaveMac = (folderName + "/" + websiteName);
+    const folderNameSaveWin = (folderName + "\\" + websiteName);
+    const folderNameSave = isMac ? folderNameSaveMac : folderNameSaveWin;
+
 
   // const folderName = outputDir;
 
