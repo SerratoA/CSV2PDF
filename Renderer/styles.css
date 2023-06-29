@@ -323,3 +323,40 @@ h4 {
   }
   .cbx:disabled ~ label:after { background: #bcbdbc; }
   .hidden { display: none; }
+
+
+
+
+  .amogus {
+    color: black;
+    font-size: 15pt;
+    position: fixed;
+    bottom: 15px;
+  }
+
+  .sus1 {
+    width: 35px;
+    z-index: -1;
+    position: fixed;
+    right: 15px;
+    bottom: 40px;
+    animation: rotation 6s infinite linear;
+  }
+
+  .sus2 {
+    width: 35px;
+    z-index: -1;
+    position: fixed;
+    left: 15px;
+    bottom: 40px;
+    animation: rotation 6s infinite linear;
+  }
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

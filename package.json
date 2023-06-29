@@ -1,5 +1,5 @@
 {
-  "name": "CSV2PDF",
+  "name": "csv-to-pdf",
   "productName": "CSV to PDF",
   "version": "1.0.0",
   "description": "App to convert csv urls to pdf",

@@ -10,6 +10,8 @@ const nightModeButton = document.getElementById("tooglenight");
 const mainBody = document.querySelector('body');
 const headerTextCol = document.querySelector(".header-text");
 const inputFileSt = document.querySelector("#inputFileStyle");
+const amogusSus = document.querySelector(".amogus");
+
 
 let nightModeStatus = false;
 
@@ -25,6 +27,7 @@ function urlToPdf(path) {
 ipcRenderer.on("start-loading", () => {
     // Trigger the loading animation here
     // For example, you can add or remove a CSS class to start or stop the animation
+    
     dotPulse.classList.remove("invisible");
     statusText.textContent = "Converting...";
 

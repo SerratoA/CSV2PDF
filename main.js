@@ -3,7 +3,7 @@ const path = require("path");
 const os = require('os');
 const fs = require('fs');
 
-process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'developer';
 
 const isMac = process.platform === "darwin";
 const isDev = process.env.NODE_ENV !== 'production';
@@ -232,4 +232,3 @@ function generatePdfs(filePath, fileName, saveDirectory) {
     shell.openPath(folderNameSave);
   });
 };
-
