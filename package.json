@@ -1,12 +1,13 @@
 {
   "name": "csv-to-pdf",
-  "productName": "CSV to PDF",
+  "productName": "CSV2PDF",
   "version": "1.0.0",
   "description": "App to convert csv urls to pdf",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
+  
   "author": "cyun and serratoA",
   "license": "MIT",
   "dependencies": {
@@ -19,6 +20,5 @@
   "devDependencies": {
     "electron": "^25.2.0",
     "electron-packager": "^17.1.1"
-    
   }
 }

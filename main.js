@@ -17,7 +17,7 @@ function createMainWindow() {
     title: "CSV to PDF Converter",
     width: 400,
     height: 500,
-    icon: `${__dirname}/img/Cat.png`,
+    icon: `./Renderer/img/Cat.png`,
     resizable: isDev,
     maximizable: false,
     webPreferences: {
@@ -51,7 +51,7 @@ function createAboutWindow() {
     width: 275,
     height: 275,
     maximizable: false,
-    icon: `${__dirname}/img/Cat.png`,
+    icon: `./Renderer/img/Cat.png`,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -114,7 +114,7 @@ app.whenReady().then(() => {
 
 
 app.on("window-all-closed", () => {
-  if (isMac) {
+  if (!isMac) {
     app.quit();
   }
 });
@@ -191,6 +191,7 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       console.error("Invalid format!");
       return;
     }
+    
     const lines = data.split('\n');
     lines.forEach((line) => {
       let trimmedLine = line.trimEnd();
