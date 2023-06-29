@@ -34,11 +34,13 @@ ipcRenderer.on("start-loading", () => {
 
 });
 
+
 ipcRenderer.on("end-loading", () =>{
     dotPulse.classList.add("invisible");
     statusText.textContent = "Drag and drop files here";
     fileInputName.textContent = "";
 })
+
 
 // Variable to track if the button is currently on cooldown
 let isButtonCooldown = false;
