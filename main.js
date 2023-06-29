@@ -186,7 +186,9 @@ function generatePdfs(filePath, fileName, saveDirectory) {
   const folderName =
     saveDirectory;
 
-    const folderNameSave = (folderName + "/" + websiteName);
+    const folderNameSaveMac = (folderName + "/" + websiteName);
+    const folderNameSaveWin = (folderName + "\\" + websiteName);
+    const folderNameSave = isMac ? folderNameSaveMac : folderNameSaveWin;
 
   // const folderName = outputDir;
 
@@ -213,8 +215,10 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       // Use base name as PDF name
       const fileName = path.basename(file[i].url);
       const teamName = path.parse(fileName).name;
-      let outputFilePath = folderName + "/" + websiteName + "/" + teamName + '.pdf';
-
+      let outputFilePathMac = folderName + "/" + websiteName + "/" + teamName + '.pdf';
+      let outputFilePathWin = folderName + "\\" + websiteName + "\\" + teamName + '.pdf';
+      let outputFilePath = isMac ? outputFilePathMac : outputFilePathWin;
+      
       // Buffering time
       let pdfBuffer = Buffer.from(output[i].buffer);
       function convertBufferToPDF(filePath, buffer) {
