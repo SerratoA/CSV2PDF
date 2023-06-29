@@ -2,8 +2,9 @@ const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require("electron")
 const path = require("path");
 const os = require('os');
 const fs = require('fs');
+const url = require("url");
 
-process.env.NODE_ENV = 'developer';
+process.env.NODE_ENV = 'production';
 
 const isMac = process.platform === "darwin";
 const isDev = process.env.NODE_ENV !== 'production';
@@ -151,12 +152,39 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
   });
 });
 
+
+function urlValidation(str) {
+  str = str.trim();
+  try {
+    const encodedUrl = encodeURI(str);
+    new URL(encodedUrl);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function writeRemovedUrlsToFile(folderNameSave, removedUrls) {
+  const filePath = `${folderNameSave}/invalid-urls.txt`;
+  const urls = removedUrls.map((item) => item.url);
+  const content = urls.join('\n');
+  
+  fs.writeFile(filePath, content, (err) => {
+    if (err) {
+      console.error('Error writing removed URLs to file:', err);
+    } else {
+      console.log('Removed URLs written to file:', filePath);
+    }
+  });
+}
+
 //Generate PDFs script
 function generatePdfs(filePath, fileName, saveDirectory) {
   const websiteName = fileName; // created folder name
   // const websiteName = customName; // custom name from the directory search
 
   const file = []; // array of objects for URLs
+  const removed = [];
 
   fs.readFile(filePath, 'utf8', (err, data) => { // line by line URL read, put into file format
     if (err) {
@@ -165,12 +193,25 @@ function generatePdfs(filePath, fileName, saveDirectory) {
     }
     const lines = data.split('\n');
     lines.forEach((line) => {
-      const fileObject = {
-        url: line.trim()
-      };
-      console.log(fileObject); // debugging
-      file.push(fileObject);
+      let trimmedLine = line.trimEnd();
+      trimmedLine = trimmedLine.replace(/,+$/, "");
+      if (urlValidation(trimmedLine)){
+        const fileObject = {
+          url: trimmedLine
+        };
+        console.log(fileObject);
+        file.push(fileObject);
+      } else {
+        const fileObject = {
+          url: trimmedLine
+        };
+        removed.push(fileObject);
+        console.error("Invalid URL", trimmedLine)
+      }
+
     });
+    console.log(file);
+    console.log(removed);
   });
 
   // formatting of the output PDF
@@ -207,8 +248,6 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       - file: URLs of websites
       - options: formatting options of output PDF
   */
-
-      
   html_to_pdf.generatePdfs(file, options).then(output => {
     for (let i = 0; i < output.length; i++) {
       let humanPageCount = i + 1;
@@ -232,7 +271,10 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       }
       convertBufferToPDF(outputFilePath, pdfBuffer);
     }
-    
+
+    console.log(file);
+    console.log(removed);
+    writeRemovedUrlsToFile(folderNameSave, removed);
     mainWindow.webContents.send("end-loading");
     shell.openPath(folderNameSave);
 }) }
