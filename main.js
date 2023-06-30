@@ -2,7 +2,6 @@ const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require("electron")
 const path = require("path");
 const os = require('os');
 const fs = require('fs');
-const fetch = require('node-fetch');
 
 
 
@@ -154,7 +153,6 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
   });
 });
 
-
 //Generate PDFs script
 function generatePdfs(filePath, fileName, saveDirectory) {
   const websiteName = fileName; // created folder name
@@ -163,10 +161,20 @@ function generatePdfs(filePath, fileName, saveDirectory) {
   const file = []; // array of objects for URLs
   const invalidUrls = [];
 
-  const validateURL = async (url) => {
+  const validateURL = (url) => {
+    const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
     try {
-      const response = await fetch(url);
-      return response.ok;
+      const parsedURL = new URL(url);
+      if (!urlPattern.test(url)) {
+        return false;
+      }
+      // Additional validation for repetitive characters in the domain name
+      const domain = parsedURL.hostname.toLowerCase();
+      const repetitiveCharsPattern = /([a-zA-Z0-9])\1{3,}/;
+      if (repetitiveCharsPattern.test(domain)) {
+        return false;
+      }
+      return true;
     } catch (error) {
       return false;
     }
@@ -179,56 +187,34 @@ function generatePdfs(filePath, fileName, saveDirectory) {
     }
 
     const lines = data.split('\n');
-    const validationPromises = [];
-
     lines.forEach((line) => {
       let trimmedLine = line.trim();
       trimmedLine = trimmedLine.replace(/,+$/, "");
-
-      const promise = new Promise((resolve) => {
-        validateURL(trimmedLine)
-          .then((isValid) => {
-            if (isValid) {
-              const fileObject = {
-                url: trimmedLine
-              };
-              console.log("is valid: " + trimmedLine); // debugging
-              file.push(fileObject);
-              resolve();
-            } else {
-              console.error('Invalid URL:' + trimmedLine);
-              invalidUrls.push(trimmedLine); // Add invalid URL to the array
-              resolve();
-            }
-          })
-          .catch(() => {
-            console.log("An error has occurred");
-            resolve();
-          });
-      });
-
-      validationPromises.push(promise);
+      if (validateURL(trimmedLine)) {
+        const fileObject = {
+          url: trimmedLine
+        };
+        console.log(fileObject); // debugging
+        file.push(fileObject);
+      } else {
+        console.error('Invalid URL:' + trimmedLine);
+        invalidUrls.push(trimmedLine); // Add invalid URL to the array
+      }
     });
 
-    // Wait for all promises to resolve
-    Promise.all(validationPromises)
-      .then(() => {
-        console.log(invalidUrls);
-
-        // After reading all the lines, check if there are any invalid URLs
-        if (invalidUrls.length > 0) {
-          const invalidUrlsFilePath = path.join(folderNameSave, "invalid_urls.txt");
-          const invalidUrlsContent = invalidUrls.join("\n");
-          fs.writeFile(invalidUrlsFilePath, invalidUrlsContent, (err) => {
-            if (err) {
-              console.error("Error creating invalid_urls.txt file");
-            } else {
-              console.log("invalid_urls.txt file created with the list of invalid URLs");
-            }
-          });
+    // After reading all the lines, check if there are any invalid URLs
+    if (invalidUrls.length > 0) {
+      const invalidUrlsFilePath = path.join(folderNameSave, "invalid_urls.txt");
+      const invalidUrlsContent = invalidUrls.join("\n");
+      fs.writeFile(invalidUrlsFilePath, invalidUrlsContent, (err) => {
+        if (err) {
+          console.error("Error creating invalid_urls.txt file");
+        } else {
+          console.log("invalid_urls.txt file created with the list of invalid URLs");
         }
       });
-    });
+    }
+  });
 
   // formatting of the output PDF
   const options = {
@@ -276,7 +262,6 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       let outputFilePathMac = folderName + "/" + websiteName + "/" + teamName + '.pdf';
       let outputFilePathWin = folderName + "\\" + websiteName + "\\" + teamName + '.pdf';
       let outputFilePath = isMac ? outputFilePathMac : outputFilePathWin;
-      console.log(outputFilePath);
       
       // Buffering time
       let pdfBuffer = Buffer.from(output[i].buffer);
