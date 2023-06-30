@@ -1,7 +1,7 @@
 # CSV2PDF
 
 
-A graphical user interface for converting a CSV files filled with URL entries into a PDF file with screencaps of the sites.
+A graphical user interface for converting a CSV file filled with URL entries into a PDF file with screencaps of the sites.
 
 <img width="433" alt="Cat" src="https://github.com/SerratoA/CSV2PDF/assets/78953056/8e5ee266-b744-4d79-84b5-a11b0f5576cb">
 
