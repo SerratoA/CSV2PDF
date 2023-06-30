@@ -153,6 +153,9 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
   });
 });
 
+
+
+
 //Generate PDFs script
 function generatePdfs(filePath, fileName, saveDirectory) {
   const websiteName = fileName; // created folder name
@@ -178,7 +181,8 @@ function generatePdfs(filePath, fileName, saveDirectory) {
 
     const lines = data.split('\n');
     lines.forEach((line) => {
-      const trimmedLine = line.trim();
+      let trimmedLine = line.trim();
+      trimmedLine = trimmedLine.replace(/,+$/, "");
       if (validateURL(trimmedLine)) {
         const fileObject = {
           url: trimmedLine
@@ -251,6 +255,7 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       let outputFilePathMac = folderName + "/" + websiteName + "/" + teamName + '.pdf';
       let outputFilePathWin = folderName + "\\" + websiteName + "\\" + teamName + '.pdf';
       let outputFilePath = isMac ? outputFilePathMac : outputFilePathWin;
+      console.log(outputFilePath);
       
       // Buffering time
       let pdfBuffer = Buffer.from(output[i].buffer);
