@@ -11,7 +11,7 @@ A graphical user interface for converting a CSV file filled with URL entries int
 
 Install the zip folder for your platform
 
-Mac -> CSV2PDF-darwin-x64
+Mac -> CSV2PDFIntel-darwin-x64 / CSV2PDARM64-darwin-x64
 
 Windows -> CSV2PDF-win32-x64
 
