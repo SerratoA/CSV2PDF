@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require("electron")
 const path = require("path");
 const os = require('os');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
 
 
@@ -154,8 +155,6 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
 });
 
 
-
-
 //Generate PDFs script
 function generatePdfs(filePath, fileName, saveDirectory) {
   const websiteName = fileName; // created folder name
@@ -164,10 +163,10 @@ function generatePdfs(filePath, fileName, saveDirectory) {
   const file = []; // array of objects for URLs
   const invalidUrls = [];
 
-  const validateURL = (url) => {
+  const validateURL = async (url) => {
     try {
-      new URL(url);
-      return true;
+      const response = await fetch(url);
+      return response.ok;
     } catch (error) {
       return false;
     }
@@ -180,34 +179,56 @@ function generatePdfs(filePath, fileName, saveDirectory) {
     }
 
     const lines = data.split('\n');
+    const validationPromises = [];
+
     lines.forEach((line) => {
       let trimmedLine = line.trim();
       trimmedLine = trimmedLine.replace(/,+$/, "");
-      if (validateURL(trimmedLine)) {
-        const fileObject = {
-          url: trimmedLine
-        };
-        console.log(fileObject); // debugging
-        file.push(fileObject);
-      } else {
-        console.error('Invalid URL:' + trimmedLine);
-        invalidUrls.push(trimmedLine); // Add invalid URL to the array
-      }
+
+      const promise = new Promise((resolve) => {
+        validateURL(trimmedLine)
+          .then((isValid) => {
+            if (isValid) {
+              const fileObject = {
+                url: trimmedLine
+              };
+              console.log("is valid: " + trimmedLine); // debugging
+              file.push(fileObject);
+              resolve();
+            } else {
+              console.error('Invalid URL:' + trimmedLine);
+              invalidUrls.push(trimmedLine); // Add invalid URL to the array
+              resolve();
+            }
+          })
+          .catch(() => {
+            console.log("An error has occurred");
+            resolve();
+          });
+      });
+
+      validationPromises.push(promise);
     });
 
-    // After reading all the lines, check if there are any invalid URLs
-    if (invalidUrls.length > 0) {
-      const invalidUrlsFilePath = path.join(folderNameSave, "invalid_urls.txt");
-      const invalidUrlsContent = invalidUrls.join("\n");
-      fs.writeFile(invalidUrlsFilePath, invalidUrlsContent, (err) => {
-        if (err) {
-          console.error("Error creating invalid_urls.txt file");
-        } else {
-          console.log("invalid_urls.txt file created with the list of invalid URLs");
+    // Wait for all promises to resolve
+    Promise.all(validationPromises)
+      .then(() => {
+        console.log(invalidUrls);
+
+        // After reading all the lines, check if there are any invalid URLs
+        if (invalidUrls.length > 0) {
+          const invalidUrlsFilePath = path.join(folderNameSave, "invalid_urls.txt");
+          const invalidUrlsContent = invalidUrls.join("\n");
+          fs.writeFile(invalidUrlsFilePath, invalidUrlsContent, (err) => {
+            if (err) {
+              console.error("Error creating invalid_urls.txt file");
+            } else {
+              console.log("invalid_urls.txt file created with the list of invalid URLs");
+            }
+          });
         }
       });
-    }
-  });
+    });
 
   // formatting of the output PDF
   const options = {
