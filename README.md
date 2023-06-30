@@ -20,4 +20,4 @@ Run on Mac:
 Use control+click to run the CSV2PDF executable, otherwise macOS will not let you run the application
 
 Run on Win: 
-Select 'run anyway' when promoted
+Select 'run anyway' when prompted
