@@ -9,22 +9,15 @@ A graphical user interface for converting a CSV files filled with URL entries in
 
 ## Usage
 
-Install dependencies:
+Install the zip folder for your platform
 
-```bash
+Mac -> CSV2PDF-darwin-x64
 
-npm install
-```
+Windows -> CSV2PDF-win32-x64
 
-Run:
 
-```bash
-npm start
-```
+Run on Mac: 
+Use control+click to run the CSV2PDF executable, otherwise macOS will not let you run the application
 
-You can also use `Electronmon` to constantly run and not have to reload after making changes
-
-```bash
-npx electronmon .
-```
-
+Run on Win: 
+Select 'run anyway' when promoted
