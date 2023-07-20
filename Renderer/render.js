@@ -1,4 +1,5 @@
 const convert = document.querySelector("#convertor");
+const scaler = document.querySelector("#scaler");
 const dropZone = document.querySelector(".drop-zone");
 const fileInput = document.querySelector("#file-input");
 const fileInputName = document.querySelector("#fileInputName");
@@ -11,11 +12,10 @@ const mainBody = document.querySelector('body');
 const headerTextCol = document.querySelector(".header-text");
 const inputFileSt = document.querySelector("#inputFileStyle");
 const amogusSus = document.querySelector(".amogus");
+const scalingText = document.querySelector(".scaleSelect");
 
 
 let nightModeStatus = false;
-
-
 //send file path to main.js to generate pdfs
 function urlToPdf(path) {
     console.log("Converting...");
@@ -35,11 +35,12 @@ ipcRenderer.on("start-loading", () => {
 });
 
 
-ipcRenderer.on("end-loading", () =>{
+ipcRenderer.on("end-loading", () => {
     dotPulse.classList.add("invisible");
     statusText.textContent = "Drag and drop files here";
     fileInputName.textContent = "";
-})
+    scaler.querySelector("select").value = "1.0"; // Set the dropdown value to 1.0 (100%)
+});
 
 
 // Variable to track if the button is currently on cooldown
@@ -93,7 +94,15 @@ document.addEventListener('drop', (e) => {
     }
 });
 
+// Event listener for the scaler
 
+scaler.addEventListener("change", (event) => {
+    const scaleValue = parseFloat(event.target.value);
+    console.log("Changed to " + scaleValue);
+    // Send the scale value to the main process
+    ipcRenderer.send('set:pdfScale', scaleValue);
+    
+})
 
 // Event listener for the convert button
 if (convert) {
@@ -124,6 +133,7 @@ if (nightModeButton) {
             mainBody.style.backgroundColor= "#2b2b2b";
             headerTextCol.style.color="white";
             inputFileSt.style.color="white";
+            scalingText.style.color="white";
             console.log("It is day time");
 
         // brightmode
@@ -133,6 +143,7 @@ if (nightModeButton) {
             mainBody.style.backgroundColor = "#ffffff";
             headerTextCol.style.color="black";
             inputFileSt.style.color="black";
+            scalingText.style.color="black";
             console.log("It is nightMode");
         }
         

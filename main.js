@@ -5,7 +5,7 @@ const fs = require('fs');
 
 
 
-process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'development';
 
 const isMac = process.platform === "darwin";
 const isDev = process.env.NODE_ENV !== 'production';
@@ -120,11 +120,16 @@ app.on("window-all-closed", () => {
   }
 });
 
+let scaleValue = 1.0;
 
 ipcMain.on("console-log", (event, ...args) => {
   console.log(...args);
 });
 
+ipcMain.on("set:pdfScale", (event, newScaleValue) => {
+  scaleValue = newScaleValue;
+  console.log("Successfuly transfered value" + scaleValue);
+})
 
 ipcMain.on('load:CsvFile', (e, CSV) => {
   dialog.showSaveDialog({ properties: ['saveFile', 'createDirectory', 'title'] }). then(result => {
@@ -142,8 +147,8 @@ ipcMain.on('load:CsvFile', (e, CSV) => {
       console.log("Save Directory: " + saveDirectory);
       
       mainWindow.webContents.send("start-loading");
-
-      generatePdfs(CSV, fileName, saveDirectory);
+      console.log(scaleValue + "Yo this is ti");
+      generatePdfs(CSV, fileName, saveDirectory, scaleValue);
     }
     else {
       console.log("No file selected, please try again!");
@@ -221,8 +226,7 @@ function generatePdfs(filePath, fileName, saveDirectory) {
     format: 'A4',
     displayHeaderFooter: true,
     printBackground: true,
-    headerTemplate: "title",
-    scale: 1.0,
+    headerTemplate: "title"
   };
 
   // CHANGE 
@@ -250,8 +254,8 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       - file: URLs of websites
       - options: formatting options of output PDF
   */
-
-      
+  options.scale = scaleValue;
+  
   html_to_pdf.generatePdfs(file, options).then(output => {
     for (let i = 0; i < output.length; i++) {
       let humanPageCount = i + 1;
@@ -275,7 +279,11 @@ function generatePdfs(filePath, fileName, saveDirectory) {
       }
       convertBufferToPDF(outputFilePath, pdfBuffer);
     }
-    
+    scaleValue = 1.0;
     mainWindow.webContents.send("end-loading");
     shell.openPath(folderNameSave);
+    
 }) }
+
+
+console.log(scaleValue);
